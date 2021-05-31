@@ -1,84 +1,51 @@
-from flask import Flask, render_template
-from flask_sqlalchemy import SQLAlchemy
-from .shop import shop_page
+from flask import Flask
 from datetime import datetime
-from hashlib import pbkdf2_hmac
 
-def hashp(password):
-    return pbkdf2_hmac("sha256", password.encode(), b"n0t-$0-s3cur3...", 1000000)
+from .db import db, login_manager, User, Marker, Test, hashp
+from .map import map_page
+from .index import idx_page
 
-app = Flask(__name__, static_url_path='')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
 
-class User(db.Model):
-    __tablename__ = "users"
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.Text, unique=True, nullable=False)
-    email = db.Column(db.Text, unique=True, nullable=False)
-    has_verified_email = db.Column(db.Boolean, nullable=False, default=False)
-    wants_spam = db.Column(db.Boolean, nullable=False, default=True)
-    password_hash = db.Column(db.LargeBinary(32), nullable=False)
-    stripe_customer = db.Column(db.Text)
-    markers = db.relationship("Marker", backref="owner")
-    transactions = db.relationship("TransactionInfo", backref="user")
+def create_app():
+    app = Flask(__name__, static_url_path='')
+    app.secret_key = b'}\xdc\x04\x9e\xba\xa8\xda0,@\x8e\x03\x9a[\xec\xb9'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    login_manager.init_app(app)
+    db.init_app(app)
+    app.register_blueprint(map_page, url_prefix="/map")
+    app.register_blueprint(idx_page)
+    setup_db(app)
+    return app
 
-    def __repr__(self):
-        return '<User %r>' % self.email
 
-class TransactionInfo(db.Model):
-    __tablename__ = "transactions"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Text, nullable=False)
-    date = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    address1 = db.Column(db.Text, nullable=False)
-    address2 = db.Column(db.Text)
-    zip_code = db.Column(db.Text, nullable=False)
-    region = db.Column(db.Text, nullable=False)
-    city = db.Column(db.Text, nullable=False)
-    phone = db.Column(db.Text, nullable=False)
-    stripe_customer = db.Column(db.Text, nullable=False)
-    stripe_session = db.Column(db.Text, nullable=False)
-    stripe_payment_intent = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+def setup_db(app):
+    with app.app_context():
+        db.create_all()
+        me = User(
+            username="AlexApps99",
+            email="alex.apps99@gmail.com",
+            has_verified_email=True,
+            password_hash=hashp("GeffIsGreat123")
+        )
+        marker = Marker(
+            name="Northcote College",
+            description="Testing Time HQ",
+            lat=-36.8095,
+            lon=174.7338
+        )
+        # make the current date be the default
+        test = Test(date=datetime.now(), nitrate=0)
+        marker.owner = me
+        test.marker = marker
+        db.session.add(me)
+        db.session.commit()
+        # print(
+        #     User.query.filter_by(username="AlexApps99")
+        #         .first().markers[0].tests[0].marker.owner
+        # )
 
-    def __repr__(self):
-        return '<TransactionInfo %r>' % self.date.strftime("%Y-%m-%d %H:%M")
 
-# A single creator per marker
-# only they can add new tests to it, or change info about it
-class Marker(db.Model):
-    __tablename__ = "markers"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Text, nullable=False)
-    description = db.Column(db.Text)
-    lat = db.Column(db.Float, nullable=False)
-    lon = db.Column(db.Float, nullable=False)
-    tests = db.relationship("Test", backref="marker")
-    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-
-    def __repr__(self):
-        return '<Marker %r>' % self.name
-
-# linked to a marker
-class Test(db.Model):
-    __tablename__ = "tests"
-    id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.Date, nullable=False)
-    lead = db.Column(db.Float, nullable=False)
-    marker_id = db.Column(db.Integer, db.ForeignKey('markers.id'), nullable=False)
-    # add other testing things later on
-    
-    def __repr__(self):
-        return '<Test %r>' % self.date.strftime("%Y-%m-%d")
-
-app.register_blueprint(shop_page, url_prefix="/shop")
-
-@app.route("/")
-def hello_world():
-    return render_template("error.html", n="Hello, World!")
-
-@app.errorhandler(404)
-def george_not_found(e):
-    return render_template('error.html', n=404), 404
+if __name__ == "__main__":
+    app = create_app()
+    app.run()

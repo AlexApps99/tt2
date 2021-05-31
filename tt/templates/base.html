@@ -1,50 +1,57 @@
 <!DOCTYPE html>
 <html lang="en-NZ">
 <head>
-<meta charset="utf-8">
-<!-- might need changing to work with finger zoom on map -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'">
-<!-- todo referrer -->
-<!-- Might need a template for this to work well
-<base href="/">
--->
+    <meta charset="utf-8">
+    <!-- might need changing to work with finger zoom on map -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src https://*.stripe.com 'self'; img-src https://*.stripe.com https://*.tile.openstreetmap.org 'self'">
+    <meta name="referrer" content="same-origin">
+    <!-- put the rest of required head stuff, eg SEO, PWA etc -->
+    <!-- https://htmlhead.dev/ -->
+    <meta name="theme-color" content="#ff00ff">
+    <meta name="description" content="Blah blah blah">
+    <!-- todo robots -->
+    <meta name="google" content="nositelinkssearchbox">
+    <meta name="google" content="notranslate">
+    <meta name="format-detection" content="telephone=no">
 
+    <!-- For marker pages
+    <meta name="ICBM" content="latitude, longitude">
+    <meta name="geo.position" content="latitude;longitude">
+    <meta name="geo.region" content="NZ">
+    -->
 
-<!-- put the rest of required head stuff, eg SEO, PWA etc -->
-<!-- https://htmlhead.dev/ -->
-<meta name="theme-color" content="#ff00ff">
-<meta name="description" content="Blah blah blah">
-<!-- todo robots -->
-<meta name="google" content="nositelinkssearchbox">
-<meta name="google" content="notranslate">
-<meta name="format-detection" content="telephone=no">
+    <link rel="manifest" href="/manifest.json">
+    <!-- for maori pages if i bother setting that up
+    should be simple as making a separate directory of templates
+    and keeping text out of most of the templates except small few
+    <link rel="alternate" href="https://mi.example.com/" hreflang="mi">
+    -->
+    <link rel="index" href="/">
+    <title>{% block title %}{% endblock %}{% if self.title() %} &middot; {% endif %}Testing Time</title>
+    <link rel="shortcut icon" sizes="196x196" href="/favicon/196.png">
+    <link rel="apple-touch-icon-precomposed" href="/favicon/180.png">
+    <link rel="apple-touch-icon" href="/favicon/180.png">
 
-<!-- For marker pages
-<meta name="ICBM" content="latitude, longitude">
-<meta name="geo.position" content="latitude;longitude">
-<meta name="geo.region" content="NZ">
--->
-
-<link rel="manifest" href="/manifest.json">
-<!-- for maori pages if i bother setting that up
-should be simple as making a separate directory of templates
-and keeping text out of most of the templates except small few
-<link rel="alternate" href="https://mi.example.com/" hreflang="mi">
--->
-<link rel="index" href="/">
-<title>{% block title %}{% endblock %}{% if self.title() %} &middot; {% endif %}Testing Time</title>
-<!-- TODO icons -->
-<!-- TODO Facebook -->
-<!-- TODO Twitter, dnt on -->
-
-
-
-<link href="/css/bootstrap.min.css" rel="stylesheet">
-{% block styles %}{% endblock %}
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    {% block styles %}{% endblock %}
 </head>
 <body>
-{% block body %}{% endblock %}
+{% block body %}
+<main class="container">
+    {% block content %}
+    <div class="bg-light p-5 rounded">
+        {% if self.title() %}<h1>{{ self.title() }}</h1>{% endif %}
+        <p class="lead">
+            Lorem ipsum dolor sit amet.
+        </p>
+        <a class="btn btn-lg btn-primary" role="button">Click</a>
+    </div>
+    {% endblock %}
+</main>
+{% endblock %}
+<script src="/pwa.js"></script>
 <script src="/js/bootstrap.bundle.min.js"></script>
 {% block scripts %}{% endblock %}
 </body>

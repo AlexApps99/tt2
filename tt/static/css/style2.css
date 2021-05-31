@@ -1,0 +1,17 @@
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-flow: column;
+}
+
+nav.navbar {
+  flex: 0 1 auto;
+}
+
+div#map {
+  flex: 1 1 auto;
+}
+

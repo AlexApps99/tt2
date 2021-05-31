@@ -5,3 +5,6 @@ __pycache__/
 *.sqlite3
 *.sqlite
 *.db
+/tt/static/favicon/*.png
+/tt/static/favicon.ico
+!/tt/static/favicon/logo.png
