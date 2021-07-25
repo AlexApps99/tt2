@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block styles %}
+<link href="css/features.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<!-- https://getbootstrap.com/docs/5.0/examples/heroes/ -->
+<!-- https://getbootstrap.com/docs/5.0/examples/features/ -->
+<main>
+  <div class="px-4 py-5 my-5 text-center">
+    <img class="d-block mx-auto mb-4" src="/favicon/180.png" alt="Logo">
+    <h1 class="display-5 fw-bold">Testing Time</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">Providing peace of mind, one test at a time.</p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <a href="/map/" class="btn btn-primary btn-lg px-4 gap-3">Map</a>
+        <a href="https://testingtimenz.mystorbie.com/" class="btn btn-outline-secondary btn-lg px-4">Shop</a>
+      </div>
+    </div>
+  </div>
+  <div class="container col-xxl-8 px-4 py-5">
+    <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+      <div class="col-10 col-sm-8 col-lg-6">
+        <img src="/screen.png" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
+      </div>
+      <div class="col-lg-6">
+        <h1 class="display-5 fw-bold lh-1 mb-3">Water quality at a glance</h1>
+        <p class="lead">So easy, it puts the government to shame.</p>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+          <a href="/map/" class="btn btn-primary btn-lg px-4 me-md-2">Try our map now</a>
+          <a href="https://testingtimenz.mystorbie.com/" class="btn btn-outline-secondary btn-lg px-4">Buy a kit now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container px-4 py-5" id="featured-3">
+    <h2 class="pb-2 border-bottom">Our values</h2>
+    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+      <div class="feature col">
+        <div class="feature-icon bg-primary bg-gradient">
+          <i class="bi-people-fill"></i>
+        </div>
+        <h2>Community</h2>
+        <p>Our platform is community focused and we want to bring a positive change.</p>
+      </div>
+      <div class="feature col">
+        <div class="feature-icon bg-primary bg-gradient">
+          <i class="bi-droplet-fill"></i>
+        </div>
+        <h2>Environment</h2>
+        <p>We like the environment and as such we are instilling positive changes with sustainability.</p>
+      </div>
+      <div class="feature col">
+        <div class="feature-icon bg-primary bg-gradient">
+          <i class="bi-bank"></i>
+        </div>
+        <h2>Accountability</h2>
+        <p>We want to bring accountability to water testing, by doing what those in charge won't.</p>
+      </div>
+    </div>
+  </div>
+<!--  <div class="container col-xl-10 col-xxl-8 px-4 py-5">
+    <div class="row align-items-center g-lg-5 py-5">
+      <div class="col-lg-7 text-center text-lg-start">
+        <h1 class="display-4 fw-bold lh-1 mb-3">Sign up now</h1>
+        <p class="col-lg-10 fs-4">Signing up is free, and allows you to purchase testing kits and upload them to this site.</p>
+      </div>
+      <div class="col-md-10 mx-auto col-lg-5">
+        <form class="p-4 p-md-5 border rounded-3 bg-light">
+          <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <label for="floatingInput">Email address</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+            <label for="floatingPassword">Password</label>
+          </div>
+          <div class="checkbox mb-3">
+            <label>
+              <input type="checkbox" value="remember-me"> Remember me
+            </label>
+          </div>
+          <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
+          <hr class="my-4">
+          <small class="text-muted">By clicking Sign up, you agree to the terms of use.</small>
+        </form>
+      </div>
+    </div>
+</div>-->
+</main>
+{% include "footer.html" %}
+{% endblock %}

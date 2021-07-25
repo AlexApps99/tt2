@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% block title %}Map{% endblock %}
+{% block styles %}
+<link href="/css/leaflet.css" rel="stylesheet">
+<link href="/css/MarkerCluster.css" rel="stylesheet">
+<link href="/css/MarkerCluster.Default.css" rel="stylesheet">
+<link href="/css/style2.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<div id="map"></div>
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title"><span id="offcanvasLabel"></span> <span class="badge bg-success" id="quality"></span></h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div id="tests" class="offcanvas-body">
+  </div>
+</div>
+{% if current_user.is_authenticated %}
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas2" aria-labelledby="offcanvas2Label">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvastitle">New marker</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+<form method="post">
+{{ form.csrf_token }}
+<input type="hidden" id="lat" name="lat">
+<input type="hidden" id="lon" name="lon">
+  <div class="mb-3">
+    <label for="markerTitle" class="form-label">Marker title</label>
+    <input type="text" class="form-control" id="markerTitle" name="markerTitle" aria-describedby="titleHelp" minlength="5" maxlength="32" required>
+    <div id="titleHelp" class="form-text">The title of your marker</div>
+  </div>
+  <div class="mb-3">
+    <label for="markerDesc" class="form-label">Marker description</label>
+    <textarea class="form-control" id="markerDesc" name="markerDesc" rows="3" aria-describedby="descHelp"></textarea>
+    <div id="descHelp" class="form-text">A short description about your marker, and how you tested it.</div>
+  </div>
+
+
+<div class="mb-3"><label for="rad" class="form-label">Nitrate results</label>
+<div class="btn-group" id="nitrate" role="group">
+<input type="radio" class="btn-check" id="nitrate0" name="nitrate" value="0" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="nitrate0">0</label>
+
+<input type="radio" class="btn-check" id="nitrate5" name="nitrate" value="5" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="nitrate5">5</label>
+
+<input type="radio" class="btn-check" id="nitrate10" name="nitrate" value="10" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="nitrate10">10</label>
+
+<input type="radio" class="btn-check" id="nitrate25" name="nitrate" value="25" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="nitrate25">25</label>
+
+<input type="radio" class="btn-check" id="nitrate50" name="nitrate" value="50" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="nitrate50">50</label>
+</div></div><div class="mb-3"><label for="rad" class="form-label">Nitride results</label>
+<div class="btn-group" id="nitride" role="group">
+<input type="radio" class="btn-check" id="nitride0" name="nitride" value="0" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="nitride0">0</label>
+
+<input type="radio" class="btn-check" id="nitride0.5" name="nitride" value="0.5" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="nitride0.5">0.5</label>
+
+<input type="radio" class="btn-check" id="nitride1" name="nitride" value="1" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="nitride1">1</label>
+
+<input type="radio" class="btn-check" id="nitride5" name="nitride" value="5" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="nitride5">5</label>
+
+<input type="radio" class="btn-check" id="nitride10" name="nitride" value="10" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="nitride10">10</label>
+</div></div><div class="mb-3"><label for="rad" class="form-label">pH results</label>
+<div class="btn-group" id="ph" role="group">
+<input type="radio" class="btn-check" id="ph4" name="ph" value="4" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="ph4">4</label>
+
+<input type="radio" class="btn-check" id="ph5" name="ph" value="5" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="ph5">5</label>
+
+<input type="radio" class="btn-check" id="ph6" name="ph" value="6" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="ph6">6</label>
+
+<input type="radio" class="btn-check" id="ph7" name="ph" value="7" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="ph7">7</label>
+
+<input type="radio" class="btn-check" id="ph8" name="ph" value="8" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="ph8">8</label>
+
+<input type="radio" class="btn-check" id="ph9" name="ph" value="9" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="ph9">9</label>
+
+<input type="radio" class="btn-check" id="ph10" name="ph" value="10" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="ph10">10</label>
+</div></div><div class="mb-3"><label for="rad" class="form-label">Free Chlorine results</label>
+<div class="btn-group" id="free_cl" role="group">
+<input type="radio" class="btn-check" id="free_cl0" name="free_cl" value="0" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="free_cl0">0</label>
+
+<input type="radio" class="btn-check" id="free_cl0.5" name="free_cl" value="0.5" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="free_cl0.5">0.5</label>
+
+<input type="radio" class="btn-check" id="free_cl1" name="free_cl" value="1" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="free_cl1">1</label>
+
+<input type="radio" class="btn-check" id="free_cl3" name="free_cl" value="3" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="free_cl3">3</label>
+
+<input type="radio" class="btn-check" id="free_cl5" name="free_cl" value="5" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="free_cl5">5</label>
+
+<input type="radio" class="btn-check" id="free_cl10" name="free_cl" value="10" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="free_cl10">10</label>
+</div></div><div class="mb-3"><label for="rad" class="form-label">Total Chlorine results</label>
+<div class="btn-group" id="total_cl" role="group">
+<input type="radio" class="btn-check" id="total_cl0" name="total_cl" value="0" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="total_cl0">0</label>
+
+<input type="radio" class="btn-check" id="total_cl0.5" name="total_cl" value="0.5" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="total_cl0.5">0.5</label>
+
+<input type="radio" class="btn-check" id="total_cl1" name="total_cl" value="1" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="total_cl1">1</label>
+
+<input type="radio" class="btn-check" id="total_cl3" name="total_cl" value="3" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="total_cl3">3</label>
+
+<input type="radio" class="btn-check" id="total_cl5" name="total_cl" value="5" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="total_cl5">5</label>
+
+<input type="radio" class="btn-check" id="total_cl10" name="total_cl" value="10" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="total_cl10">10</label>
+</div></div><div class="mb-3"><label for="rad" class="form-label">Hardness results</label>
+<div class="btn-group" id="hardness" role="group">
+<input type="radio" class="btn-check" id="hardness0" name="hardness" value="0" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="hardness0">0</label>
+
+<input type="radio" class="btn-check" id="hardness50" name="hardness" value="50" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="hardness50">50</label>
+
+<input type="radio" class="btn-check" id="hardness100" name="hardness" value="100" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="hardness100">100</label>
+
+<input type="radio" class="btn-check" id="hardness200" name="hardness" value="200" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="hardness200">200</label>
+
+<input type="radio" class="btn-check" id="hardness400" name="hardness" value="400" autocomplete="off" required>
+<label class="btn btn-outline-primary" for="hardness400">400</label>
+</div></div>
+
+<input type="hidden" id="marker_id" name="marker_id" value="">
+
+<input class="btn btn-primary" type="submit" value="Submit">
+
+</form>
+
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+{% block scripts %}
+<script src="/js/leaflet.js"></script>
+<script src="/js/leaflet-providers.js"></script>
+<script src="/js/leaflet.markercluster.js"></script>
+<script src="/js/test.js"></script>
+{% endblock %}

@@ -11,22 +11,16 @@ from ..db import get_user
 idx_page = Blueprint("index", __name__, template_folder="templates")
 
 
-@idx_page.route('/')
-def show():
-    return render_template("base.html", n="Mapman")
-
-
 @idx_page.route("/")
 def hello_world():
-    return render_template("error.html", n="Hello, World!")
+    return render_template("index.html")
 
 
 class LoginForm(FlaskForm):
     email = EmailField('email', validators=[DataRequired(), Email()])
-    password = PasswordField(
-        'password',
-        validators=[DataRequired(), Length(8, 100)]
-    )
+    password = PasswordField('password',
+                             validators=[DataRequired(),
+                                         Length(8, 100)])
     remember_me = BooleanField('remember_me')
 
 
@@ -48,7 +42,9 @@ def login():
 @login_required
 def logout():
     flask_login.logout_user()
-    return redirect('/')
+    # TODO potential security risk right here
+    next = flask.request.args.get('next')
+    return redirect(next or '/')
 
 
 @idx_page.errorhandler(404)

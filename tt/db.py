@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from hashlib import pbkdf2_hmac
 from numpy import base_repr
+
 db = SQLAlchemy()
 login_manager = LoginManager()
 
@@ -9,10 +10,10 @@ login_manager = LoginManager()
 class User(db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.Text, unique=True, nullable=False)
+    #username = db.Column(db.Text, unique=True, nullable=False)
     email = db.Column(db.Text, unique=True, nullable=False)
-    has_verified_email = db.Column(db.Boolean, nullable=False, default=False)
-    wants_spam = db.Column(db.Boolean, nullable=False, default=True)
+    #has_verified_email = db.Column(db.Boolean, nullable=False, default=False)
+    #wants_spam = db.Column(db.Boolean, nullable=False, default=True)
     godmode = db.Column(db.Boolean, nullable=False, default=False)
     password_hash = db.Column(db.LargeBinary(32), nullable=False)
     markers = db.relationship("Marker", backref="owner")
@@ -59,26 +60,23 @@ class Test(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date, nullable=False)
     nitrate = db.Column(db.Float, nullable=False)
-    # nitride = db.Column(db.Float, nullable=False)
-    # ph = db.Column(db.Float, nullable=False)
-    # free_cl = db.Column(db.Float, nullable=False)
-    # total_cl = db.Column(db.Float, nullable=False)
-    # hardness = db.Column(db.Float, nullable=False)
-    marker_id = db.Column(
-        db.Integer, db.ForeignKey('markers.id'), nullable=False
-    )
+    nitride = db.Column(db.Float, nullable=False)
+    ph = db.Column(db.Float, nullable=False)
+    free_cl = db.Column(db.Float, nullable=False)
+    total_cl = db.Column(db.Float, nullable=False)
+    hardness = db.Column(db.Float, nullable=False)
+    marker_id = db.Column(db.Integer,
+                          db.ForeignKey('markers.id'),
+                          nullable=False)
 
     def __repr__(self):
         return '<Test %r>' % self.date.strftime("%Y-%m-%d")
 
 
 def hashp(password: str):
-    return pbkdf2_hmac(
-        "sha256",
-        password.encode(),
-        b'zA\xee\xdbk\xd5\xc1@\xa8\xee\x83\xfft\x9d\x9c\xa0',
-        1000000
-    )
+    return pbkdf2_hmac("sha256", password.encode(),
+                       b'zA\xee\xdbk\xd5\xc1@\xa8\xee\x83\xfft\x9d\x9c\xa0',
+                       1000000)
 
 
 def decode_test_id(test_id: str):

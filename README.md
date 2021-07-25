@@ -22,3 +22,42 @@ https://pythonhosted.org/Flask-Principal/
 
 Consider using OAuth to log in
 Eg google account
+
+
+geolocation api to get location?
+`const getCurrentPosition=o=>{return new Promise((resolve,reject)=>navigator.geolocation.getCurrentPosition(p=>resolve(p),e=>reject(e),o))};getCurrentPosition({enableHighAccuracy:!0,timeout:1000}).then(p=>console.log(p.coords))`
+
+have all the login stuff, sadly
+I will need to do emails out and subscriptions?
+so i might as well track submitted tests and other stuff
+
+
+index
+- branding
+- talk about how great we are
+- shop
+- map
+- blog
+- help/faq
+- about us (press (sh/k)it)
+- about our product
+- privacy policy, ToS
+
+shop
+- subdomain
+- NOT storbie because its shit
+- refund, shipping policy
+- credit card (probably stripe)
+- bank deposit
+- https://support.nzpost.co.nz/app/answers/detail/a_id/1469/~/new-zealand-post%E2%80%99s-addressing-api (FREE)
+
+blog
+- subdomain, maybe just jekyll or wordpress or something
+- maybe just do a mailing list if i can't be arsed
+
+map
+- 
+
+
+https://github.com/Leaflet/Leaflet.toolbar
+for a plus button

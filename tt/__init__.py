@@ -1,5 +1,5 @@
 from flask import Flask
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from .db import db, login_manager, User, Marker, Test, hashp
 from .map import map_page
@@ -15,28 +15,50 @@ def create_app():
     db.init_app(app)
     app.register_blueprint(map_page, url_prefix="/map")
     app.register_blueprint(idx_page)
+    #app.context_processor(i18n_processor)
     setup_db(app)
     return app
+
+
+def i18n_processor():
+    def i18n(s):
+        return s
+
+    return {"i18n": i18n, "_": i18n}
 
 
 def setup_db(app):
     with app.app_context():
         db.create_all()
-        me = User(
-            username="AlexApps99",
-            email="alex.apps99@gmail.com",
-            has_verified_email=True,
-            password_hash=hashp("GeffIsGreat123")
-        )
-        marker = Marker(
-            name="Northcote College",
-            description="Testing Time HQ",
-            lat=-36.8095,
-            lon=174.7338
-        )
+        me = User(email="alex.apps99@gmail.com",
+                  password_hash=hashp("GeffIsGreat123"),
+                  godmode=True)
+        marker = Marker(name="Northcote College",
+                        description="Testing Time HQ",
+                        lat=-36.8095,
+                        lon=174.7338)
         # make the current date be the default
-        test = Test(date=datetime.now(), nitrate=0)
+        test = Test(
+            date=datetime.now(),
+            nitrate=0,
+            nitride=0,
+            ph=6,
+            free_cl=0,
+            total_cl=0,
+            hardness=0,
+        )
+        prevtest = Test(
+            date=datetime.now() - timedelta(days=3),
+            nitrate=0,
+            nitride=0,
+            ph=4,
+            free_cl=0,
+            total_cl=0,
+            hardness=0,
+        )
+
         marker.owner = me
+        prevtest.marker = marker
         test.marker = marker
         db.session.add(me)
         db.session.commit()

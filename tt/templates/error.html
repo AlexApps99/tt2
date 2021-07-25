@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Error {{ n }}{% endblock %}
-{% block body %}
+{% block main %}
 In this video, we coded it so that this page would not be found.
 {% if current_user.is_authenticated %}
 Sorry, {{ current_user.username }}.
