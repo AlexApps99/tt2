@@ -73,7 +73,10 @@ def setup_db(app):
         #         .first().markers[0].tests[0].marker.owner
         # )
 
-
-if __name__ == "__main__":
+def main():
     app = create_app()
     app.run()
+
+if __name__ == "__main__":
+    main()
+
