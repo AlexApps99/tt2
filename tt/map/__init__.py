@@ -9,6 +9,7 @@ from flask_login import current_user
 map_page = Blueprint("map", __name__, template_folder="templates")
 
 
+# more validation would be nice
 class UploadForm(FlaskForm):
     lat = DecimalField('lat', validators=[DataRequired()])
     lon = DecimalField('lon', validators=[DataRequired()])
@@ -34,19 +35,28 @@ class UploadForm(FlaskForm):
     hardness = IntegerField('hardness',
                             validators=[InputRequired(),
                                         NumberRange(0, 400)])
-    #marker_id = StringField('marker_id')
+    marker_id = StringField('marker_id')
 
 
 # Use anchors to hone in on specific markers
 # clientside
+# add a share button to make users use this
 @map_page.route('/', methods=['GET', 'POST'])
 def show():
     form = UploadForm()
     if current_user.is_authenticated and form.validate_on_submit():
-        marker = Marker(name=form.markerTitle.data,
+        if form.marker_id.data:
+            marker = Marker.query.get(form.marker_id.data)
+            marker.name = form.markerTitle.data
+            marker.description = form.markerDesc.data
+            marker.lat = form.lat.data
+            marker.lon = form.lon.data
+        else:
+            marker = Marker(name=form.markerTitle.data,
                         description=form.markerDesc.data,
                         lat=form.lat.data,
                         lon=form.lon.data)
+            marker.owner = current_user
         test = Test(
             date=datetime.now(),
             nitrate=form.nitrate.data,
@@ -59,15 +69,18 @@ def show():
         # lol i need to sort out accounts ASAP
         #marker.owner = me
         test.marker = marker
-        marker.owner = current_user
-        db.session.add(marker)
+        if form.marker_id.data:
+            db.session.add(test)
+        else:
+            db.session.add(marker)
         #db.session.add(me)
         db.session.commit()
+        return redirect("/map/")
     else:
-        print(form.errors)
+        pass #print(form.errors)
     return render_template("map.html", form=form)
 
-
+# TODO is this consistent?
 @map_page.route('/map.json')
 def map_data():
     return jsonify([[m.id, [m.lat, m.lon],
@@ -149,12 +162,7 @@ def marker_data(n):
         "description":
         marker.description,
         "pos": [marker.lat, marker.lon],
-        "tests": [
-            a[1]
-            for a in sorted([(t.date, gen_test_obj(t)) for t in marker.tests],
-                            key=lambda x: x[0],
-                            reverse=True)
-        ],
+        "tests": [gen_test_obj(t) for t in reversed(marker.tests)],
         "owned":
         False,  # TODO
     }

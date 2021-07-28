@@ -2,6 +2,11 @@ const offcanvas = new bootstrap.Offcanvas(document.getElementById("offcanvas"));
 const offcanvas2el = document.getElementById("offcanvas2");
 const lat = document.getElementById("lat");
 const lon = document.getElementById("lon");
+const marker_id = document.getElementById("marker_id");
+const offcanvastitle = document.getElementById("offcanvastitle");
+const markerTitle = document.getElementById("markerTitle");
+const markerDesc = document.getElementById("markerDesc");
+const add_test = document.getElementById("add_test");
 const offcanvas2 = (() => {
   if (offcanvas2el != null) {
     return new bootstrap.Offcanvas(offcanvas2el);
@@ -20,7 +25,7 @@ const RISKY_ICON = new ICON({iconUrl: 'risky-icon.png', iconRetinaUrl: 'risky-ic
 const UNSAFE_ICON = new ICON({iconUrl: 'unsafe-icon.png', iconRetinaUrl: 'unsafe-icon-2x.png'});
 
 function testentry(t) {
-  console.log(t);
+  //console.log(t);
   return `<table class="table caption-top">
   <caption>${t.date}</caption>
   <tbody>
@@ -63,8 +68,18 @@ const RATINGS = [
 // change image
 let editing_marker = L.marker([0.0, 0.0]);
 editing_marker.setOpacity(1/3);
+let current_data = null;
 if (offcanvas2 != null) {
-  offcanvas2el.addEventListener('hide.bs.offcanvas', () => editing_marker.remove());
+  offcanvas2el.addEventListener('hide.bs.offcanvas', () => {
+    editing_marker.remove();
+    if (current_data != null) {
+      current_data = null;
+      markerTitle.value = "";
+      markerDesc.value = "";
+      marker_id.value = "";
+      offcanvastitle.innerText = "New marker";
+    }
+  });
 }
 
 // Find a way to cancel older async if its pressed multiple times
@@ -72,6 +87,7 @@ function pop2(o) {
   //console.log(o);
   fetch(o.layer.options.internal_id.toString() + ".json").then(r => r.json()).then(j => {
     if (j == null) return;
+    current_data = j;
     //console.log(j);
     offcanvasLabel.innerText = j.name;
     tests.innerHTML = `<div>${j.description}</div>`;
@@ -120,4 +136,17 @@ map.on("click", o => {
   lon.value = o.latlng.lng;
   offcanvas2.show();
 })
+
+add_test.onclick = btn => {
+  if (current_data == null) return;
+  offcanvastitle.innerText = "Edit marker";
+  markerTitle.value = current_data.name;
+  markerDesc.value = current_data.description;
+  marker_id.value = current_data.id;
+  lat.value = current_data.pos[0];
+  lon.value = current_data.pos[1];
+  offcanvas.hide();
+  offcanvas2.show();
+}
+
 }

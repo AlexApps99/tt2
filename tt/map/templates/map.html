@@ -10,7 +10,9 @@
 <div id="map"></div>
 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
   <div class="offcanvas-header">
+    {# TODO restrict the addition of tests to the owners #}
     <h5 class="offcanvas-title"><span id="offcanvasLabel"></span> <span class="badge bg-success" id="quality"></span></h5>
+    {% if current_user.is_authenticated %}<button type="button" class="btn btn-primary m-3" id="add_test">+</button>{% endif %}
     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div id="tests" class="offcanvas-body">
@@ -27,6 +29,7 @@
 {{ form.csrf_token }}
 <input type="hidden" id="lat" name="lat">
 <input type="hidden" id="lon" name="lon">
+<input type="hidden" id="marker_id" name="marker_id">
   <div class="mb-3">
     <label for="markerTitle" class="form-label">Marker title</label>
     <input type="text" class="form-control" id="markerTitle" name="markerTitle" aria-describedby="titleHelp" minlength="5" maxlength="32" required>
