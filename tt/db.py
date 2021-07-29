@@ -16,7 +16,7 @@ class User(db.Model):
     #wants_spam = db.Column(db.Boolean, nullable=False, default=True)
     godmode = db.Column(db.Boolean, nullable=False, default=False)
     password_hash = db.Column(db.LargeBinary(32), nullable=False)
-    markers = db.relationship("Marker", backref="owner")
+    markers = db.relationship("Marker", backref="owner", cascade="all, delete-orphan")
 
     @property
     def is_authenticated(self):
@@ -46,7 +46,7 @@ class Marker(db.Model):
     description = db.Column(db.Text)
     lat = db.Column(db.Float, nullable=False)
     lon = db.Column(db.Float, nullable=False)
-    tests = db.relationship("Test", backref="marker")
+    tests = db.relationship("Test", backref="marker", cascade="all, delete-orphan")
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     def __repr__(self):
