@@ -1,3 +1,4 @@
+import flask
 from flask import Blueprint, render_template, jsonify, redirect
 from wtforms import StringField, DecimalField, TextAreaField, IntegerField
 from flask_wtf import FlaskForm
@@ -149,11 +150,16 @@ def quality(t):
     return q
 
 
-@map_page.route('/<int:n>.json')
+# TODO add post, use that over the dumb form thing
+@map_page.route('/<int:n>.json', methods=['GET', 'DELETE'])
 def marker_data(n):
     marker = Marker.query.get(n)
     if marker is None:
         return jsonify(None), 404
+    if flask.request.method == 'DELETE' and current_user.is_authenticated and current_user.godmode:
+        db.session.delete(marker)
+        db.session.commit()
+        return
     return {
         "id":
         marker.id,
