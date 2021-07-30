@@ -60,7 +60,7 @@ class Test(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date, nullable=False)
     nitrate = db.Column(db.Float, nullable=False)
-    nitride = db.Column(db.Float, nullable=False)
+    nitrite = db.Column(db.Float, nullable=False)
     ph = db.Column(db.Float, nullable=False)
     free_cl = db.Column(db.Float, nullable=False)
     total_cl = db.Column(db.Float, nullable=False)

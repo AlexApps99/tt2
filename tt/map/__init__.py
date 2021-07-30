@@ -23,7 +23,7 @@ class UploadForm(FlaskForm):
     nitrate = DecimalField('nitrate',
                            validators=[InputRequired(),
                                        NumberRange(0, 50)])
-    nitride = DecimalField('nitride',
+    nitrite = DecimalField('nitrite',
                            validators=[InputRequired(),
                                        NumberRange(0, 10)])
     ph = IntegerField('ph', validators=[DataRequired(), NumberRange(4, 10)])
@@ -61,7 +61,7 @@ def show():
         test = Test(
             date=datetime.now(),
             nitrate=form.nitrate.data,
-            nitride=form.nitride.data,
+            nitrite=form.nitrite.data,
             ph=form.ph.data,
             free_cl=form.free_cl.data,
             total_cl=form.total_cl.data,
@@ -95,7 +95,7 @@ def gen_test_obj(t):
         "quality": min(q),
         "qualities": q,
         "nitrate": t.nitrate,
-        "nitride": t.nitride,
+        "nitrite": t.nitrite,
         "ph": t.ph,
         "free_cl": t.free_cl,
         "total_cl": t.total_cl,
@@ -105,47 +105,43 @@ def gen_test_obj(t):
 
 def quality(t):
     q = []
-    if t.nitrate < 1:
+    if t.nitrate <= 10:
         q.append(3)
-    elif t.nitrate < 2:
+    elif t.nitrate < 50:
         q.append(2)
     else:
         q.append(1)
 
-    if t.nitride < 1:
+    if t.nitrite <= 0.5:
         q.append(3)
-    elif t.nitride < 2:
+    elif t.nitrite <= 5:
         q.append(2)
     else:
         q.append(1)
 
-    if t.ph == 7:
+    if t.ph >= 6 and t.ph <= 9:
         q.append(3)
-    elif t.ph == 6 or t.ph == 8:
+    else:
+        q.append(2)
+
+    if t.free_cl <= 1:
+        q.append(3)
+    elif t.free_cl < 5:
         q.append(2)
     else:
         q.append(1)
 
-    if t.free_cl < 1:
+    if t.total_cl <= 1:
         q.append(3)
-    elif t.free_cl < 2:
+    elif t.total_cl < 5:
         q.append(2)
     else:
         q.append(1)
 
-    if t.total_cl < 1:
+    if t.hardness >= 100 and t.hardness <= 300:
         q.append(3)
-    elif t.total_cl < 2:
-        q.append(2)
     else:
-        q.append(1)
-
-    if t.hardness < 1:
-        q.append(3)
-    elif t.hardness < 2:
         q.append(2)
-    else:
-        q.append(1)
 
     return q
 

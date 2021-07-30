@@ -34,8 +34,8 @@ function testentry(t) {
       <td>${t.nitrate} ppm</td>
     </tr>
     <tr class="table-${RATINGS[t.qualities[1]][0]}">
-      <th scope="row">Nitride</th>
-      <td>${t.nitride} ppm</td>
+      <th scope="row">Nitrite</th>
+      <td>${t.nitrite} ppm</td>
     </tr>
     <tr class="table-${RATINGS[t.qualities[2]][0]}">
       <th scope="row">pH</th>

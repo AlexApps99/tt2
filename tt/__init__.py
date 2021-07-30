@@ -47,7 +47,7 @@ def setup_db(app):
             test = Test(
                 date=datetime.now(),
                 nitrate=0,
-                nitride=0,
+                nitrite=0,
                 ph=6,
                 free_cl=0,
                 total_cl=0,
@@ -56,7 +56,7 @@ def setup_db(app):
             prevtest = Test(
                 date=datetime.now() - timedelta(days=3),
                 nitrate=0,
-                nitride=0,
+                nitrite=0,
                 ph=4,
                 free_cl=0,
                 total_cl=0,
