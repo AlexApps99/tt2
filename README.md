@@ -1,4 +1,5 @@
 Password hashing = hashlib
+https://www.health.govt.nz/system/files/documents/publications/dwsnz-2005-revised-mar2019.pdf
 
 Use blueprints to split up code nicely
 https://flask.palletsprojects.com/en/2.0.x/blueprints/
