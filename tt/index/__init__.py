@@ -16,6 +16,11 @@ def hello_world():
     return render_template("index.html")
 
 
+@idx_page.route("/help/")
+def help_page():
+    return render_template("help.html")
+
+
 class LoginForm(FlaskForm):
     email = EmailField('email', validators=[DataRequired(), Email()])
     password = PasswordField('password',
