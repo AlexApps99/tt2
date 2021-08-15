@@ -92,6 +92,7 @@ function pop2(o) {
     offcanvasLabel.innerText = j.name;
     let div = document.createElement('div');
     div.innerText = j.description;
+    tests.innerHTML = "";
     tests.appendChild(div);
 
 	for (const t of j.tests) {

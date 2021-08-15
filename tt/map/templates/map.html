@@ -13,7 +13,7 @@
     {# TODO restrict the addition of tests to the owners #}
     <h5 class="offcanvas-title"><span id="offcanvasLabel"></span> <span class="badge bg-success" id="quality"></span></h5>
 
-    {% if current_user.is_authenticated and current_user.godmode %}<button type="button" class="btn btn-danger m-3" id="remove_marker">-</button><script src="/del.js"></script>{% endif %}
+    {% if current_user.is_authenticated and current_user.godmode == True and current_user.email != "demo@northcote.school.nz" %}<button type="button" class="btn btn-danger m-3" id="remove_marker">-</button><script src="/del.js"></script>{% endif %}
     {% if current_user.is_authenticated %}<button type="button" class="btn btn-primary m-3" id="add_test">+</button>{% endif %}
     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
